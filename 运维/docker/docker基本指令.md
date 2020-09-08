@@ -1,13 +1,29 @@
-| command                                                      | explain                                                      | example                                                      |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| docker version                                               | 查看docker版本                                               |                                                              |
-| docker info                                                  | 查看docker详细信息                                           | docker info --format {{json .}} 以json格式输出docker的详细信息 |
+docker 核心组件
+
+- 镜像：镜像是一个只读的静态模板，他保存了容器需要的环境和应用的执行代码，可以将镜像看成是容器的代码，当代码运行起来之后，就成了容器，镜像和容器的关系类似于程序和进程的关系
+- 容器：容器是一个运行时环境，是镜像的一个运行状态，它是镜像执行的动态表现
+- 库：库是一个特定的用户存储镜像的目录，一个用户可以建立多个库来保存自己的镜像
+
+| command                                                      |                           explain                            | example                                                      |
+| ------------------------------------------------------------ | :----------------------------------------------------------: | ------------------------------------------------------------ |
+| docker version                                               |                        查看docker版本                        |                                                              |
+| docker info                                                  |                      查看docker详细信息                      | docker info --format {{json .}} 以json格式输出docker的详细信息 |
 |                                                              |                                                              |                                                              |
-| docker images                                                | 查看docker镜像                                               |                                                              |
-| docker search tomcat                                         | 从Docker Hub上查找镜像                                       |                                                              |
+| docker images                                                |                        查看docker镜像                        |                                                              |
+| docker search tomcat                                         |                    从Docker Hub上查找镜像                    |                                                              |
 | docker pull tomcat                                           | 从Docker Hub上下载tomcat镜像。等价于：`docker pull tomcat:latest` |                                                              |
-| docker commit -m "提交的描述信息" -a "作者" 容器ID 要创建的目标镜像名称:[标签名] | 提交容器使之成为一个新的镜像。                               | 例：如：`docker commit -m "新的tomcat" -a "lizq" f9e29e8455a5 mytomcat:1.2` |
-| docker rmi hello-world                                       | 从Docker中删除hello-world镜像                                |                                                              |
+| docker commit -m "提交的描述信息" -a "作者" 容器ID 要创建的目标镜像名称:[标签名] |                提交容器使之成为一个新的镜像。                | 例：如：`docker commit -m "新的tomcat" -a "lizq" f9e29e8455a5 mytomcat:1.2` |
+| docker rmi hello-world                                       |                从Docker中删除hello-world镜像                 |                                                              |
+| https://www.cnblogs.com/justdojava/p/11271246.html           |                                                              |                                                              |
+| docker ps                                                    |                    查看当前正在运行的容器                    |                                                              |
+| docker ps -a                                                 |                         查看所有容器                         |                                                              |
+| docker ps -l                                                 |                      查看最近创建的容器                      |                                                              |
+| docker ps -n = xxx                                           |                    查看最新创建的n个容器                     |                                                              |
+|                                                              |                                                              |                                                              |
+| docker create                                                |                         创建一个容器                         |                                                              |
+| docker create --name='aaa'                                   |                                                              |                                                              |
+|                                                              |                                                              |                                                              |
+|                                                              |                                                              |                                                              |
 |                                                              |                                                              |                                                              |
 
 - ![image-20200905150652454](docker基本指令.assets/image-20200905150652454.png)
@@ -31,6 +47,17 @@
   docker images -q 只显示镜像ID
 
 - docker search -s 30 tomcat 从Docker Hub上查找关注度大于30的tomcat镜像
+
 - docker rmi -f hello-world`从Docker中强制删除hello-world镜像
   docker rmi -f hello-world nginx`从Docker中强制删除hello-world镜像和nginx镜像
   docker rmi -f $(docker images -p)`通过`docker images -p 查询到的镜像ID来删除所有镜像
+  
+- ![微信截图_20200908192300](docker基本指令.assets/微信截图_20200908192300.png)
+
+  - CONTAINER ID:CONTAINER ID是指容器的id，是一个唯一标识符,这是一个64位的十六进制整数，在不会混淆的情况下可以只采用id的前几位进行标识一个容器。
+  - IMAGE:IMAGE表示创建容器时使用的镜像。
+  - COMMAND:COMMAND表示容器最后运行的命令。
+  - CREATED:创建容器的时间。
+  - STATUS:容器的状态，这里可能显示一个容器启动时间，也能显示容器关闭时间。具体显示哪个要看容器当前的状态。
+  - PORTS:容器对外开放的端口。
+  - NAMES:容器的名字，如果不设置，会有一个默认的名字。
