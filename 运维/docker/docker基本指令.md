@@ -20,11 +20,13 @@ docker 核心组件
 | docker ps -l                                                 |                      查看最近创建的容器                      |                                                              |
 | docker ps -n = xxx                                           |                    查看最新创建的n个容器                     |                                                              |
 |                                                              |                                                              |                                                              |
-| docker create                                                |                         创建一个容器                         |                                                              |
-| docker create --name='aaa'                                   |                                                              |                                                              |
-|                                                              |                                                              |                                                              |
-|                                                              |                                                              |                                                              |
-|                                                              |                                                              |                                                              |
+| docker create                                                |                         创建一个容器                         | docker crate nginx                                           |
+| docker create --name='aaa'                                   |                  创建一个容器并且自定义名字                  | docker  create nginx --name 'naginx01' nginx                 |
+| docker rm ${docker ps -a 的names}                            |                     单个删除已创建的容器                     | docker rm nginx                                              |
+| docker run --name='' -d -p                                   |                                                              |                                                              |
+| docker start                                                 | 启动容器，一般第一次启动容器使用docker run,后续使用docker start |                                                              |
+| docker ps -a -q                                              |                      列出所有容器的 id                       |                                                              |
+| docker stop                                                  |                         终止一个容器                         |                                                              |
 
 - ![image-20200905150652454](docker基本指令.assets/image-20200905150652454.png)
 
@@ -61,3 +63,91 @@ docker 核心组件
   - STATUS:容器的状态，这里可能显示一个容器启动时间，也能显示容器关闭时间。具体显示哪个要看容器当前的状态。
   - PORTS:容器对外开放的端口。
   - NAMES:容器的名字，如果不设置，会有一个默认的名字。
+  
+- 容器创建+启动 docker run
+
+  - 后台型容器：
+
+  ````shell
+  docker run --name nginx1 -d -p 8080:80 nginx
+  ````
+
+  ​	--name:创建容器的名称。
+
+  ​	-d:容器再后台运行
+
+  ​	-p:将容器的80端口映射到宿主机的8080端口
+
+  ​	首先依然会去本地检查，本地没有相应的容器，则会去 Docker Hub 上查找，查找到了下载并运行，并且生成了一个容器 id。
+
+  - 交互性容器
+
+    ````shell
+    docker run --name ubuntu -it ubuntu /bin/bash
+    ````
+
+    -it 参数，i 表示开发容器的标准输入（STDIN），t 则表示告诉 docker，为容器创建一个命令行终端。
+
+    
+
+linux文件目录区分：
+
+当为[ d ]则是目录
+
+当为[ - ]则是文件；
+
+若是[ l ]则表示为链接文档(link file)；
+
+若是[ b ]则表示为装置文件里面的可供储存的接口设备(可随机存取装置)；
+
+若是[ c ]则表示为装置文件里面的串行端口设备，例如键盘、鼠标(一次性读取装置)。
+
+
+
+将jar包打成镜像
+
+Dockerfile: https://www.cnblogs.com/panwenbin-logs/p/8007348.html#_label0
+
+Dockerfile是一个包含用于组合映像的命令的文本文档。可以使用在命令行中调用任何命令。 **Docker通过读取`Dockerfile`中的指令自动生成映像。**
+
+`docker build`命令用于从Dockerfile构建映像。**可以在`docker build`命令中使用`-f`标志指向文件系统中任何位置的Dockerfile。**
+
+Dockerfile一般分为4个部分
+
+- 基础镜像信息；
+- 维护者信息；
+- 镜像操作指令；
+- 容器启动时执行指令
+
+常用指令：
+
+**FROM**:指定基础镜像，必须为第一个命令
+
+````shell
+#格式
+FROM <image>
+FROM <image>:<tag>
+FROM <image>@<digest>
+#示列
+FROM mysql:5.6
+#注：
+# tag 或 digest是可选的，如果不使用这两个值时，会使用latest版本的基础镜像
+````
+
+**MAINTAINER**:维护者信息
+
+````shell
+#格式：
+MAINTAINER <name>
+#示例：
+    MAINTAINER Jasper Xu
+    MAINTAINER sorex@163.com
+    MAINTAINER Jasper Xu <sorex@163.com>
+````
+
+**ADD**：将本地文件添加到容器中，
+
+
+
+
+
