@@ -14,6 +14,8 @@ IP层的ip地址可以唯一标示主机，而TCP层协议和端口号可以唯�
 
 javasocket编程：
 
+**BIO**
+
 客户端：
 
 ````java
@@ -225,3 +227,34 @@ javasocket编程：
 
 
 
+**NIO**
+
+ByteBuffer :缓冲区，本质是一个可以写入数据的内存块，然后可以再次读取。
+
+- 使用buffer进行数据写入与读取，需要如下四个步骤：
+  1. 将数据写入缓冲区
+  2. 调用buffer.flip(),转换为读取模式
+  3. 缓冲区读取数据
+  4. 调用buffer.clear(）或buffer.compact清除缓冲区
+- 三个重要属性：
+  1. capacity容量
+  2. position位置
+  3. limit限制：写入模式，限制等于Buffer的容量。读取模式下，limit等于写入的数据量
+
+- 为性能关键性代码提供了**直接内存（direct堆外）和非直接内存（heap堆）**两种实现。
+
+  - 堆外内存的获取方式：
+
+    ````java
+    ByteBuffer directByteBuffer = ByteBuffer.allocateDirect(noBytes);
+    ````
+
+  - 好处：
+
+    1. 进行网络io或者文件io时比heapBuffer少一次拷贝。原因：(file/socket --- OS memory --- java heap) GC会移动对象内存，在写fule或者socket的过程中，JVM的实现中，会先把数据复制到堆外，再进行写入。
+
+       - 为什么会复制到堆外：
+
+         在jvm进行io写入时，会调用操作系统的api，然后传给操作系统要写入数据的内存地址，如果不复制，**GC会移动对象的内存，会导致jvm的地址改变**，操作系统直接读取jvm的heap，会导致读取不到。所以要先复制一份到堆外内存，然后告诉操作系统复制后的地址，再进行写入
+       
+    2. GC范围之外,降低GC压力，但实现了自动化管理。DirectByteBuffer中有一个Cleaner对象（PhantomReference）,Cleaner被GC前会执行clean方法，触发DirectByteBuffer中定义的Deallocator
